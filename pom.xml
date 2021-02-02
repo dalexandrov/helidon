@@ -1529,5 +1529,47 @@ helidon-parent,helidon-dependencies,helidon-bom,helidon-se,helidon-mp,io.grpc,he
                 </pluginManagement>
             </build>
         </profile>
+        <profile>
+            <id>records</id>
+            <activation>
+                <jdk>15</jdk>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <configuration>
+                                <source>15</source>
+                                <target>15</target>
+                                <release>15</release>
+                                <compilerArgs>--enable-preview</compilerArgs>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-javadoc-plugin</artifactId>
+                            <configuration>
+                                <source>15</source>
+                                <release>15</release>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-surefire-plugin</artifactId>
+                            <version>${version.plugin.surefire}</version>
+                            <configuration>
+                                <useModulePath>false</useModulePath>
+                                <trimStackTrace>false</trimStackTrace>
+                                <!-- DO NOT override argLine instead use surefire.argLine -->
+                                <argLine>${surefire.argLine} ${surefire.coverage.argline} --enable-preview</argLine>
+                                <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
     </profiles>
 </project>

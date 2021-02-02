@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Oracle and/or its affiliates.
+ * Copyright (c) 2020, 2021 Oracle and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,15 +25,7 @@ import io.helidon.common.context.Contexts;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
 
-class ContextSubscriber<T> implements Subscriber<T> {
-
-    private final String prefix;
-    private final Subscriber<T> subscriber;
-
-    ContextSubscriber(final String prefix, final Subscriber<T> subscriber) {
-        this.prefix = prefix;
-        this.subscriber = subscriber;
-    }
+record ContextSubscriber<T>(String prefix, Subscriber<T> subscriber) implements Subscriber<T> {
 
     static <T> ContextSubscriber<T> create(String prefix, Subscriber<T> subscriber) {
         return new ContextSubscriber<>(prefix, subscriber);
