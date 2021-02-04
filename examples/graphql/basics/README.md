@@ -19,7 +19,7 @@ Probe the GraphQL endpoints:
 1. Hello word endpoint:
 
     ```bash
-    curl -X POST http://127.0.0.1:PORT/graphql -d '{"query":"query { hello }"}'       
+    curl -X POST http://127.0.0.1:8080/graphql -d '{"query":"query { hello }"}'       
    
     "data":{"hello":"world"}}
     ```
@@ -27,7 +27,7 @@ Probe the GraphQL endpoints:
 1. Hello in different languages
 
     ```bash
-    curl -X POST http://127.0.0.1:PORT/graphql -d '{"query":"query { helloInDifferentLanguages }"}'       
+    curl -X POST http://127.0.0.1:8080/graphql -d '{"query":"query { helloInDifferentLanguages }"}'       
    
     {"data":{"helloInDifferentLanguages":["Bonjour","Hola","Zdravstvuyte","Nǐn hǎo","Salve","Gudday","Konnichiwa","Guten Tag"]}}
     ```  

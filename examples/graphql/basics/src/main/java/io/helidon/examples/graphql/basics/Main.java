@@ -18,7 +18,10 @@ package io.helidon.examples.graphql.basics;
 
 import java.util.List;
 
+import io.helidon.common.LogConfig;
+import io.helidon.config.Config;
 import io.helidon.graphql.server.GraphQlSupport;
+import io.helidon.media.jsonp.JsonpSupport;
 import io.helidon.webserver.Routing;
 import io.helidon.webserver.WebServer;
 
@@ -44,7 +47,16 @@ public class Main {
      * @param args not used
      */
     public static void main(String[] args) {
+        LogConfig.configureRuntime();
+
+        // By default this will pick up application.yaml from the classpath
+        Config config = Config.create();
+
+
         WebServer server = WebServer.builder()
+                .config(config.get("server"))
+                .port(8080)
+                .addMediaSupport(JsonpSupport.create())
                 .routing(Routing.builder()
                                  .register(GraphQlSupport.create(buildSchema()))
                                  .build())
