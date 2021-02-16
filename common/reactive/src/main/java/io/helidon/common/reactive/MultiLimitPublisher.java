@@ -22,13 +22,12 @@ import java.util.concurrent.Flow;
 /**
  * Limit the number of items passing through, canceling the upstream and completing
  * the downstream.
+ *
  * @param <T> the element type of the sequence
  */
-final class MultiLimitPublisher<T> implements Multi<T> {
-
-    private final Multi<T> source;
-
-    private final long limit;
+final record MultiLimitPublisher<T>(
+        Multi<T> source,
+        long limit) implements Multi<T> {
 
     MultiLimitPublisher(Multi<T> source, long limit) {
         if (limit < 0L) {

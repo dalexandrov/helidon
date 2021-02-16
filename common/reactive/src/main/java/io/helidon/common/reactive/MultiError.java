@@ -25,13 +25,8 @@ import java.util.concurrent.Flow.Subscriber;
  *
  * @param <T> item type
  */
-final class MultiError<T> implements Multi<T> {
-
-    private final Throwable error;
-
-    private MultiError(Throwable error) {
-        this.error = Objects.requireNonNull(error, "error");
-    }
+final record MultiError<T>(
+        Throwable error) implements Multi<T> {
 
     static <T> MultiError<T> create(Throwable error) {
         return new MultiError<T>(error);
@@ -45,6 +40,7 @@ final class MultiError<T> implements Multi<T> {
 
     /**
      * Returns the hosted {@code Throwable} instance.
+     *
      * @return the hosted {@code Throwable} instance
      */
     Throwable getError() {

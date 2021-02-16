@@ -22,18 +22,13 @@ import java.util.function.Predicate;
 
 /**
  * Drop items while the predicate returns true, relay the rest as they are.
+ *
  * @param <T> the element type of the sequence
  */
-final class MultiDropWhilePublisher<T> implements Multi<T> {
+final record MultiDropWhilePublisher<T>(
+        Multi<T> source,
+        Predicate<? super T> predicate) implements Multi<T> {
 
-    private final Multi<T> source;
-
-    private final Predicate<? super T> predicate;
-
-    MultiDropWhilePublisher(Multi<T> source, Predicate<? super T> predicate) {
-        this.source = source;
-        this.predicate = predicate;
-    }
 
     @Override
     public void subscribe(Flow.Subscriber<? super T> subscriber) {

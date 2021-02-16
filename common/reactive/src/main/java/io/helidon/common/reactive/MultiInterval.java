@@ -26,22 +26,12 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * Signal an ever increasing long value periodically.
  */
-final class MultiInterval implements Multi<Long> {
+final record MultiInterval(
+        long initialDelay,
+        long period,
+        TimeUnit unit,
+        ScheduledExecutorService executor) implements Multi<Long> {
 
-    private final long initialDelay;
-
-    private final long period;
-
-    private final TimeUnit unit;
-
-    private final ScheduledExecutorService executor;
-
-    MultiInterval(long initialDelay, long period, TimeUnit unit, ScheduledExecutorService executor) {
-        this.initialDelay = initialDelay;
-        this.period = period;
-        this.unit = unit;
-        this.executor = executor;
-    }
 
     @Override
     public void subscribe(Flow.Subscriber<? super Long> subscriber) {

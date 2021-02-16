@@ -23,15 +23,10 @@ import java.util.function.Supplier;
 
 /**
  * Create a Flow.Publisher for each incoming subscriber via a supplier callback.
+ *
  * @param <T> the element type of the sequence
  */
-final class MultiDefer<T> implements Multi<T> {
-
-    private final Supplier<? extends Flow.Publisher<? extends T>> supplier;
-
-    MultiDefer(Supplier<? extends Flow.Publisher<? extends T>> supplier) {
-        this.supplier = supplier;
-    }
+final record MultiDefer<T>(Supplier<? extends Flow.Publisher<? extends T>> supplier) implements Multi<T> {
 
     @Override
     public void subscribe(Flow.Subscriber<? super T> subscriber) {

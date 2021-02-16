@@ -25,9 +25,7 @@ import java.util.concurrent.Flow.Subscriber;
  *
  * @param <T> items type
  */
-final class MultiFromPublisher<T> implements Multi<T> {
-
-    private final Flow.Publisher<? extends T> source;
+final record MultiFromPublisher<T>(Flow.Publisher<? extends T> source) implements Multi<T> {
 
     MultiFromPublisher(Publisher<? extends T> source) {
         Objects.requireNonNull(source, "source cannot be null!");

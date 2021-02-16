@@ -21,17 +21,11 @@ import java.util.Objects;
 import java.util.concurrent.Flow;
 import java.util.function.Predicate;
 
-final class MultiFilterPublisher<T> implements Multi<T> {
-
-    private final Multi<T> source;
-
-    private final Predicate<? super T> predicate;
-
-    MultiFilterPublisher(Multi<T> source, Predicate<? super T> predicate) {
-        this.source = source;
-        this.predicate = predicate;
-    }
-
+final record MultiFilterPublisher<T>(
+        Multi<T> source,
+        Predicate<? super T> predicate
+) implements Multi<T> {
+    
     @Override
     public void subscribe(Flow.Subscriber<? super T> subscriber) {
         source.subscribe(new FilterSubscriber<>(subscriber, predicate));

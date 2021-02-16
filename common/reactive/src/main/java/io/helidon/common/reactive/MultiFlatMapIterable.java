@@ -27,24 +27,15 @@ import java.util.function.Function;
 
 /**
  * Map each upstream item into an Iterable and stream their values.
+ *
  * @param <T> the upstream item type
  * @param <R> the output item type
  */
-final class MultiFlatMapIterable<T, R> implements Multi<R> {
+final record MultiFlatMapIterable<T, R>(
+        Multi<T> source,
+        Function<? super T, ? extends Iterable<? extends R>> mapper,
+        int prefetch) implements Multi<R> {
 
-    private final Multi<T> source;
-
-    private final Function<? super T, ? extends Iterable<? extends R>> mapper;
-
-    private final int prefetch;
-
-    MultiFlatMapIterable(Multi<T> source,
-                         Function<? super T, ? extends Iterable<? extends R>> mapper,
-                         int prefetch) {
-        this.source = source;
-        this.mapper = mapper;
-        this.prefetch = prefetch;
-    }
 
     @Override
     public void subscribe(Flow.Subscriber<? super R> subscriber) {
@@ -156,7 +147,7 @@ final class MultiFlatMapIterable<T, R> implements Multi<R> {
 
             int missed = 1;
             outer:
-            for (;;) {
+            for (; ; ) {
 
                 if (canceled) {
                     iterator = null;
@@ -315,7 +306,7 @@ final class MultiFlatMapIterable<T, R> implements Multi<R> {
         }
 
         void clear() {
-            for (;;) {
+            for (; ; ) {
                 if (poll() == null) {
                     break;
                 }

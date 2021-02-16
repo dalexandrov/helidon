@@ -22,18 +22,13 @@ import java.util.function.BiConsumer;
 
 /**
  * Signal the outcome of the give CompletionStage.
+ *
  * @param <T> the element type of the source and result
  */
-final class MultiFromCompletionStage<T> implements Multi<T> {
+final record MultiFromCompletionStage<T>(
+        CompletionStage<T> source,
+        boolean nullMeansEmpty) implements Multi<T> {
 
-    private final CompletionStage<T> source;
-
-    private final boolean nullMeansEmpty;
-
-    MultiFromCompletionStage(CompletionStage<T> source, boolean nullMeansEmpty) {
-        this.source = source;
-        this.nullMeansEmpty = nullMeansEmpty;
-    }
 
     @Override
     public void subscribe(Flow.Subscriber<? super T> subscriber) {
@@ -56,6 +51,7 @@ final class MultiFromCompletionStage<T> implements Multi<T> {
         private final AtomicBiConsumer<T> watcher;
 
         private CompletionStage<T> source;
+
         CompletionStageSubscription(Flow.Subscriber<? super T> downstream, boolean nullMeansEmpty,
                                     AtomicBiConsumer<T> watcher, CompletionStage<T> source) {
             super(downstream);
@@ -86,7 +82,7 @@ final class MultiFromCompletionStage<T> implements Multi<T> {
     }
 
     static final class AtomicBiConsumer<T> extends AtomicReference<BiConsumer<T, Throwable>>
-    implements BiConsumer<T, Throwable> {
+            implements BiConsumer<T, Throwable> {
 
         @Override
         public void accept(T t, Throwable throwable) {

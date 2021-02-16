@@ -31,14 +31,11 @@ import java.util.concurrent.atomic.AtomicReference;
  *
  * @param <T> item type
  */
-public final class ConcatPublisher<T> implements Flow.Publisher<T>, Multi<T> {
-    private final Flow.Publisher<T> firstPublisher;
-    private final Flow.Publisher<T> secondPublisher;
+public record ConcatPublisher<T>(
+        Flow.Publisher<T> firstPublisher,
+        Flow.Publisher<T> secondPublisher)
+        implements Flow.Publisher<T>, Multi<T> {
 
-    private ConcatPublisher(Flow.Publisher<T> firstPublisher, Flow.Publisher<T> secondPublisher) {
-        this.firstPublisher = firstPublisher;
-        this.secondPublisher = secondPublisher;
-    }
 
     /**
      * Create new {@code ConcatPublisher}.
@@ -106,7 +103,7 @@ public final class ConcatPublisher<T> implements Flow.Publisher<T>, Multi<T> {
             }
 
             int missed = 1;
-            for (;;) {
+            for (; ; ) {
 
                 if (index == 0) {
                     index = 1;

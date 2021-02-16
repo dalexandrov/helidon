@@ -30,30 +30,17 @@ import java.util.function.Function;
 /**
  * Maps the upstream values into {@link java.util.concurrent.Flow.Publisher}s,
  * subscribes to some of them and funnels their events into a single sequence.
+ *
  * @param <T> the upstream element type
  * @param <R> the element type of the resulting and inner publishers
  */
-final class MultiFlatMapPublisher<T, R> implements Multi<R> {
+final record MultiFlatMapPublisher<T, R>(
+        Multi<T> source,
+        Function<? super T, ? extends Flow.Publisher<? extends R>> mapper,
+        long maxConcurrency,
+        long prefetch,
+        boolean delayErrors) implements Multi<R> {
 
-    private final Multi<T> source;
-
-    private final Function<? super T, ? extends Flow.Publisher<? extends R>> mapper;
-
-    private final long maxConcurrency;
-
-    private final long prefetch;
-
-    private final boolean delayErrors;
-
-    MultiFlatMapPublisher(Multi<T> source,
-                          Function<? super T, ? extends Flow.Publisher<? extends R>> mapper,
-                          long maxConcurrency, long prefetch, boolean delayErrors) {
-        this.source = source;
-        this.mapper = mapper;
-        this.maxConcurrency = maxConcurrency;
-        this.prefetch = prefetch;
-        this.delayErrors = delayErrors;
-    }
 
     @Override
     public void subscribe(Flow.Subscriber<? super R> subscriber) {
@@ -63,7 +50,7 @@ final class MultiFlatMapPublisher<T, R> implements Multi<R> {
     }
 
     static final class FlatMapSubscriber<T, R> extends AtomicInteger
-    implements Flow.Subscriber<T>, Flow.Subscription {
+            implements Flow.Subscriber<T>, Flow.Subscription {
 
         private final Flow.Subscriber<? super R> downstream;
 
@@ -304,7 +291,7 @@ final class MultiFlatMapPublisher<T, R> implements Multi<R> {
         }
 
         void addError(Throwable throwable) {
-            for (;;) {
+            for (; ; ) {
                 Throwable ex = errors.get();
                 if (ex == null) {
                     if (errors.compareAndSet(null, throwable)) {
@@ -341,7 +328,7 @@ final class MultiFlatMapPublisher<T, R> implements Multi<R> {
             AtomicReference<Queue<InnerSubscriber<R>>> queue = this.queue;
             ConcurrentMap<?, ?> subscribers = this.subscribers;
 
-            for (;;) {
+            for (; ; ) {
 
                 if (canceled) {
                     queue.lazySet(null);
@@ -411,6 +398,7 @@ final class MultiFlatMapPublisher<T, R> implements Multi<R> {
         /**
          * Instances of this class will be subscribed to the mapped inner
          * Publishers and calls back to the enclosing parent class.
+         *
          * @param <R> the element type of the inner sequence
          */
         static final class InnerSubscriber<R>

@@ -27,9 +27,7 @@ import java.util.concurrent.atomic.AtomicLong;
  *
  * @param <T> item type
  */
-final class MultiFromIterable<T> implements Multi<T> {
-
-    private final Iterable<T> iterable;
+final record MultiFromIterable<T>(Iterable<T> iterable) implements Multi<T> {
 
     MultiFromIterable(Iterable<T> iterable) {
         Objects.requireNonNull(iterable, "iterable is null");
@@ -90,7 +88,7 @@ final class MultiFromIterable<T> implements Multi<T> {
             long emitted = 0L;
             Flow.Subscriber<? super T> downstream = this.downstream;
 
-            for (;;) {
+            for (; ; ) {
                 while (emitted != n) {
                     int isCanceled = canceled;
                     if (isCanceled != 0) {

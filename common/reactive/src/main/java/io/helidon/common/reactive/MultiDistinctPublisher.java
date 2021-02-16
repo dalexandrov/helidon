@@ -22,16 +22,10 @@ import java.util.Set;
 import java.util.concurrent.Flow;
 import java.util.function.Function;
 
-final class MultiDistinctPublisher<T, K> implements Multi<T> {
+final record MultiDistinctPublisher<T, K>(
+        Multi<T> source,
+        Function<T, K> keySelector) implements Multi<T> {
 
-    private final Multi<T> source;
-
-    private final Function<T, K> keySelector;
-
-    MultiDistinctPublisher(Multi<T> source, Function<T, K> keySelector) {
-        this.source = source;
-        this.keySelector = keySelector;
-    }
 
     @Override
     public void subscribe(Flow.Subscriber<? super T> subscriber) {

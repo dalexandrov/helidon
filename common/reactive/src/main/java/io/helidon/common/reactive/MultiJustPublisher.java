@@ -19,16 +19,10 @@ import java.util.concurrent.Flow;
 
 /**
  * Signals a single item then completes.
+ *
  * @param <T> the type of the single item
  */
-final class MultiJustPublisher<T> implements Multi<T> {
-
-    private final T value;
-
-
-    MultiJustPublisher(T value) {
-        this.value = value;
-    }
+final record MultiJustPublisher<T>(T value) implements Multi<T> {
 
     @Override
     public void subscribe(Flow.Subscriber<? super T> subscriber) {

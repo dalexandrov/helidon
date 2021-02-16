@@ -28,9 +28,8 @@ import java.util.stream.Stream;
  *
  * @param <T> item type
  */
-final class MultiFromStream<T> implements Multi<T> {
+final record MultiFromStream<T>(Stream<T> stream) implements Multi<T> {
 
-    private final Stream<T> stream;
 
     MultiFromStream(Stream<T> stream) {
         Objects.requireNonNull(stream, "stream is null");

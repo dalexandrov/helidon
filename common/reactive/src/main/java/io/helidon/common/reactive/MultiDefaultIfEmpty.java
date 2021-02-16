@@ -23,18 +23,14 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Signal an item if the source is empty.
+ *
  * @param <T> the element type
  */
-final class MultiDefaultIfEmpty<T> implements Multi<T> {
+final record MultiDefaultIfEmpty<T>(
+        Multi<T> source,
+        T defaultItem)
+        implements Multi<T> {
 
-    private final Multi<T> source;
-
-    private final T defaultItem;
-
-    MultiDefaultIfEmpty(Multi<T> source, T defaultItem) {
-        this.source = source;
-        this.defaultItem = defaultItem;
-    }
 
     @Override
     public void subscribe(Flow.Subscriber<? super T> subscriber) {
@@ -42,7 +38,7 @@ final class MultiDefaultIfEmpty<T> implements Multi<T> {
     }
 
     static final class DefaultIfEmptySubscriber<T>
-    implements Flow.Subscriber<T>, Flow.Subscription {
+            implements Flow.Subscriber<T>, Flow.Subscription {
 
         private final Flow.Subscriber<? super T> downstream;
 
