@@ -30,32 +30,20 @@ import io.helidon.common.reactive.Single;
  * Readable {@link MessageBodyContent}.
  */
 @SuppressWarnings("deprecation")
-public final class MessageBodyReadableContent
+public final record MessageBodyReadableContent( Publisher<DataChunk> publisher, MessageBodyReaderContext context)
         implements MessageBodyReaders, MessageBodyFilters, MessageBodyContent, io.helidon.common.http.Content {
 
-    private final Publisher<DataChunk> publisher;
-    private final MessageBodyReaderContext context;
 
     /**
      * Create a new readable content backed by the specified publisher.
      * @param publisher content publisher
      * @param context reader context
      */
-    MessageBodyReadableContent(Publisher<DataChunk> publisher, MessageBodyReaderContext context) {
+    public MessageBodyReadableContent(Publisher<DataChunk> publisher, MessageBodyReaderContext context) {
         Objects.requireNonNull(publisher, "publisher is null!");
         Objects.requireNonNull(context, "context is null!");
         this.publisher = publisher;
         this.context = context;
-    }
-
-    /**
-     * Copy constructor.
-     * @param orig original context to be copied
-     */
-    private MessageBodyReadableContent(MessageBodyReadableContent orig) {
-        Objects.requireNonNull(orig, "orig is null!");
-        this.publisher = orig.publisher;
-        this.context = orig.context;
     }
 
     /**

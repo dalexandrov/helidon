@@ -32,15 +32,8 @@ import io.helidon.media.common.spi.MediaSupportProvider;
 /**
  * Media support.
  */
-public final class MediaContext {
+public record MediaContext(MessageBodyReaderContext readerContext,MessageBodyWriterContext writerContext) {
 
-    private final MessageBodyReaderContext readerContext;
-    private final MessageBodyWriterContext writerContext;
-
-    private MediaContext(MessageBodyReaderContext readerContext, MessageBodyWriterContext writerContext) {
-        this.readerContext = readerContext;
-        this.writerContext = writerContext;
-    }
 
     /**
      * Create a new instance with default readers and writers registered to the contexts.
