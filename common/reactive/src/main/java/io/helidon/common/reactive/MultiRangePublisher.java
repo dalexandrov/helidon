@@ -20,16 +20,10 @@ package io.helidon.common.reactive;
 import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicLong;
 
-final class MultiRangePublisher implements Multi<Integer> {
+final record MultiRangePublisher(
+        int start,
+        int end) implements Multi<Integer> {
 
-    private final int start;
-
-    private final int end;
-
-    MultiRangePublisher(int start, int end) {
-        this.start = start;
-        this.end = end;
-    }
 
     @Override
     public void subscribe(Flow.Subscriber<? super Integer> subscriber) {
@@ -71,7 +65,7 @@ final class MultiRangePublisher implements Multi<Integer> {
             int end = this.end;
             Flow.Subscriber<? super Integer> downstream = this.downstream;
 
-            for (;;) {
+            for (; ; ) {
 
                 while (i != end && e != n) {
 

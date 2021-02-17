@@ -29,28 +29,16 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * Falls back to an alternate sequence if the main sequence doesn't produce
  * the next item in the given time window.
+ *
  * @param <T> the element type
  */
-final class MultiTimeout<T> implements Multi<T> {
-
-    private final Multi<T> source;
-
-    private final long timeout;
-
-    private final TimeUnit unit;
-
-    private final ScheduledExecutorService executor;
-
-    private final Flow.Publisher<T> fallback;
-
-    MultiTimeout(Multi<T> source, long timeout, TimeUnit unit,
-                 ScheduledExecutorService executor, Flow.Publisher<T> fallback) {
-        this.source = source;
-        this.timeout = timeout;
-        this.unit = unit;
-        this.executor = executor;
-        this.fallback = fallback;
-    }
+final record MultiTimeout<T>(
+        Multi<T> source,
+        long timeout,
+        TimeUnit unit,
+        ScheduledExecutorService executor,
+        Flow.Publisher<T> fallback
+) implements Multi<T> {
 
     @Override
     public void subscribe(Flow.Subscriber<? super T> subscriber) {
@@ -61,7 +49,7 @@ final class MultiTimeout<T> implements Multi<T> {
     }
 
     static final class TimeoutSubscriber<T> extends AtomicLong
-    implements Flow.Subscriber<T>, Flow.Subscription {
+            implements Flow.Subscriber<T>, Flow.Subscription {
 
         private final Flow.Subscriber<? super T> downstream;
 
@@ -194,8 +182,8 @@ final class MultiTimeout<T> implements Multi<T> {
         }
 
         static final class FallbackSubscriber<T>
-        extends AtomicReference<Flow.Subscription>
-        implements Flow.Subscriber<T> {
+                extends AtomicReference<Flow.Subscription>
+                implements Flow.Subscriber<T> {
 
             private final Flow.Subscriber<? super T> downstream;
 

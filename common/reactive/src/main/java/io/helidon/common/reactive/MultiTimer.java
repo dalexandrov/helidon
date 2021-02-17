@@ -27,19 +27,10 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * Signal 0L and complete after the specified time.
  */
-final class MultiTimer implements Multi<Long> {
-
-    private final long time;
-
-    private final TimeUnit unit;
-
-    private final ScheduledExecutorService executor;
-
-    MultiTimer(long time, TimeUnit unit, ScheduledExecutorService executor) {
-        this.time = time;
-        this.unit = unit;
-        this.executor = executor;
-    }
+final record MultiTimer(
+        long time,
+        TimeUnit unit,
+        ScheduledExecutorService executor) implements Multi<Long> {
 
     @Override
     public void subscribe(Flow.Subscriber<? super Long> subscriber) {
@@ -50,7 +41,7 @@ final class MultiTimer implements Multi<Long> {
     }
 
     static final class TimerSubscription extends DeferredScalarSubscription<Long>
-    implements Callable<Void> {
+            implements Callable<Void> {
 
         private final AtomicReference<Future<?>> future;
 

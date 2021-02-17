@@ -30,13 +30,9 @@ import java.util.function.Function;
  *
  * @param <T> return type of the asynchronous operation
  */
-class OptionalCompletionStageImpl<T> implements OptionalCompletionStage<T> {
+record OptionalCompletionStageImpl<T>(
+        CompletionStage<Optional<T>> originalStage) implements OptionalCompletionStage<T> {
 
-    private final CompletionStage<Optional<T>> originalStage;
-
-    OptionalCompletionStageImpl(CompletionStage<Optional<T>> originalStag) {
-        this.originalStage = originalStag;
-    }
 
     @Override
     public OptionalCompletionStage<T> onEmpty(Runnable action) {
@@ -68,7 +64,7 @@ class OptionalCompletionStageImpl<T> implements OptionalCompletionStage<T> {
 
     @Override
     public <U> CompletionStage<U> thenApplyAsync(Function<? super Optional<T>, ? extends U> fn,
-            Executor executor) {
+                                                 Executor executor) {
         return originalStage.thenApplyAsync(fn, executor);
     }
 
@@ -84,7 +80,7 @@ class OptionalCompletionStageImpl<T> implements OptionalCompletionStage<T> {
 
     @Override
     public CompletionStage<Void> thenAcceptAsync(Consumer<? super Optional<T>> action,
-            Executor executor) {
+                                                 Executor executor) {
         return originalStage.thenAcceptAsync(action, executor);
     }
 
@@ -105,39 +101,39 @@ class OptionalCompletionStageImpl<T> implements OptionalCompletionStage<T> {
 
     @Override
     public <U, V> CompletionStage<V> thenCombine(CompletionStage<? extends U> other,
-            BiFunction<? super Optional<T>, ? super U, ? extends V> fn) {
+                                                 BiFunction<? super Optional<T>, ? super U, ? extends V> fn) {
         return originalStage.thenCombine(other, fn);
     }
 
     @Override
     public <U, V> CompletionStage<V> thenCombineAsync(CompletionStage<? extends U> other,
-            BiFunction<? super Optional<T>, ? super U, ? extends V> fn) {
+                                                      BiFunction<? super Optional<T>, ? super U, ? extends V> fn) {
         return originalStage.thenCombineAsync(other, fn);
     }
 
     @Override
     public <U, V> CompletionStage<V> thenCombineAsync(CompletionStage<? extends U> other,
-            BiFunction<? super Optional<T>, ? super U, ? extends V> fn,
-            Executor executor) {
+                                                      BiFunction<? super Optional<T>, ? super U, ? extends V> fn,
+                                                      Executor executor) {
         return originalStage.thenCombineAsync(other, fn, executor);
     }
 
     @Override
     public <U> CompletionStage<Void> thenAcceptBoth(CompletionStage<? extends U> other,
-            BiConsumer<? super Optional<T>, ? super U> action) {
+                                                    BiConsumer<? super Optional<T>, ? super U> action) {
         return originalStage.thenAcceptBoth(other, action);
     }
 
     @Override
     public <U> CompletionStage<Void> thenAcceptBothAsync(CompletionStage<? extends U> other,
-            BiConsumer<? super Optional<T>, ? super U> action) {
+                                                         BiConsumer<? super Optional<T>, ? super U> action) {
         return originalStage.thenAcceptBothAsync(other, action);
     }
 
     @Override
     public <U> CompletionStage<Void> thenAcceptBothAsync(CompletionStage<? extends U> other,
-            BiConsumer<? super Optional<T>, ? super U> action,
-            Executor executor) {
+                                                         BiConsumer<? super Optional<T>, ? super U> action,
+                                                         Executor executor) {
         return originalStage.thenAcceptBothAsync(other, action, executor);
     }
 
@@ -158,39 +154,39 @@ class OptionalCompletionStageImpl<T> implements OptionalCompletionStage<T> {
 
     @Override
     public <U> CompletionStage<U> applyToEither(CompletionStage<? extends Optional<T>> other,
-            Function<? super Optional<T>, U> fn) {
+                                                Function<? super Optional<T>, U> fn) {
         return originalStage.applyToEither(other, fn);
     }
 
     @Override
     public <U> CompletionStage<U> applyToEitherAsync(CompletionStage<? extends Optional<T>> other,
-            Function<? super Optional<T>, U> fn) {
+                                                     Function<? super Optional<T>, U> fn) {
         return originalStage.applyToEitherAsync(other, fn);
     }
 
     @Override
     public <U> CompletionStage<U> applyToEitherAsync(CompletionStage<? extends Optional<T>> other,
-            Function<? super Optional<T>, U> fn,
-            Executor executor) {
+                                                     Function<? super Optional<T>, U> fn,
+                                                     Executor executor) {
         return originalStage.applyToEitherAsync(other, fn, executor);
     }
 
     @Override
     public CompletionStage<Void> acceptEither(CompletionStage<? extends Optional<T>> other,
-            Consumer<? super Optional<T>> action) {
+                                              Consumer<? super Optional<T>> action) {
         return originalStage.acceptEither(other, action);
     }
 
     @Override
     public CompletionStage<Void> acceptEitherAsync(CompletionStage<? extends Optional<T>> other,
-            Consumer<? super Optional<T>> action) {
+                                                   Consumer<? super Optional<T>> action) {
         return originalStage.acceptEitherAsync(other, action);
     }
 
     @Override
     public CompletionStage<Void> acceptEitherAsync(CompletionStage<? extends Optional<T>> other,
-            Consumer<? super Optional<T>> action,
-            Executor executor) {
+                                                   Consumer<? super Optional<T>> action,
+                                                   Executor executor) {
         return originalStage.acceptEitherAsync(other, action, executor);
     }
 
@@ -206,8 +202,8 @@ class OptionalCompletionStageImpl<T> implements OptionalCompletionStage<T> {
 
     @Override
     public CompletionStage<Void> runAfterEitherAsync(CompletionStage<?> other,
-            Runnable action,
-            Executor executor) {
+                                                     Runnable action,
+                                                     Executor executor) {
         return originalStage.runAfterEitherAsync(other, action, executor);
     }
 
@@ -223,7 +219,7 @@ class OptionalCompletionStageImpl<T> implements OptionalCompletionStage<T> {
 
     @Override
     public <U> CompletionStage<U> thenComposeAsync(Function<? super Optional<T>, ? extends CompletionStage<U>> fn,
-            Executor executor) {
+                                                   Executor executor) {
         return originalStage.thenComposeAsync(fn, executor);
     }
 
@@ -244,7 +240,7 @@ class OptionalCompletionStageImpl<T> implements OptionalCompletionStage<T> {
 
     @Override
     public CompletionStage<Optional<T>> whenCompleteAsync(BiConsumer<? super Optional<T>, ? super Throwable> action,
-            Executor executor) {
+                                                          Executor executor) {
         return originalStage.whenCompleteAsync(action, executor);
     }
 
@@ -260,7 +256,7 @@ class OptionalCompletionStageImpl<T> implements OptionalCompletionStage<T> {
 
     @Override
     public <U> CompletionStage<U> handleAsync(BiFunction<? super Optional<T>, Throwable, ? extends U> fn,
-            Executor executor) {
+                                              Executor executor) {
         return originalStage.handleAsync(fn, executor);
     }
 

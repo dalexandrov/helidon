@@ -26,23 +26,19 @@ import java.util.function.BiPredicate;
 
 /**
  * Retry a failing source based on some condition or timing.
+ *
  * @param <T> the element type of the source
  * @param <U> the signal type of the publisher indicating when to retry
  */
-final class MultiRetry<T, U> implements Multi<T> {
+final record MultiRetry<T, U>(
+        Multi<T> source,
+        BiFunction<? super Throwable, ? super Long, ? extends Flow.Publisher<U>> whenFunction) implements Multi<T> {
 
-    private final Multi<T> source;
-
-    private final BiFunction<? super Throwable, ? super Long, ? extends Flow.Publisher<U>> whenFunction;
-
-    /** Indicate an immediate re-subscription. */
+    /**
+     * Indicate an immediate re-subscription.
+     */
     private static final Multi<Object> NOW = Multi.singleton(1);
 
-    MultiRetry(Multi<T> source,
-               BiFunction<? super Throwable, ? super Long, ? extends Flow.Publisher<U>> whenFunction) {
-        this.source = source;
-        this.whenFunction = whenFunction;
-    }
 
     MultiRetry(Multi<T> source, long count) {
         this(source, withCount(count));
@@ -71,7 +67,7 @@ final class MultiRetry<T, U> implements Multi<T> {
     }
 
     static final class RetrySubscriber<T, U> extends SubscriptionArbiter
-    implements Flow.Subscriber<T> {
+            implements Flow.Subscriber<T> {
 
         private final Flow.Subscriber<? super T> downstream;
 

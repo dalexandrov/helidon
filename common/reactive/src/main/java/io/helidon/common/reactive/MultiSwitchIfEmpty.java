@@ -23,18 +23,12 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Switch to an alternate sequence if the main sequence is empty.
+ *
  * @param <T> the element type of the sequences
  */
-final class MultiSwitchIfEmpty<T> implements Multi<T> {
-
-    private final Multi<T> source;
-
-    private final Flow.Publisher<T> fallback;
-
-    MultiSwitchIfEmpty(Multi<T> source, Flow.Publisher<T> fallback) {
-        this.source = source;
-        this.fallback = fallback;
-    }
+final record MultiSwitchIfEmpty<T>(
+        Multi<T> source,
+        Flow.Publisher<T> fallback) implements Multi<T> {
 
     @Override
     public void subscribe(Flow.Subscriber<? super T> subscriber) {
@@ -103,8 +97,8 @@ final class MultiSwitchIfEmpty<T> implements Multi<T> {
         }
 
         static final class FallbackSubscriber<T>
-        extends AtomicReference<Flow.Subscription>
-        implements Flow.Subscriber<T> {
+                extends AtomicReference<Flow.Subscription>
+                implements Flow.Subscriber<T> {
 
             private final Flow.Subscriber<? super T> downstream;
 

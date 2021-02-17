@@ -25,19 +25,14 @@ import java.util.function.Function;
 /**
  * Maps the success value of a {@link Single} into an {@link Iterable} and
  * emits its items to the downstream.
+ *
  * @param <T> the source value type
  * @param <R> the result value type
  */
-final class SingleFlatMapIterable<T, R> implements Multi<R> {
+final record SingleFlatMapIterable<T, R>(
+        Single<T> source,
+        Function<? super T, ? extends Iterable<? extends R>> mapper) implements Multi<R> {
 
-    private final Single<T> source;
-
-    private final Function<? super T, ? extends Iterable<? extends R>> mapper;
-
-    SingleFlatMapIterable(Single<T> source, Function<? super T, ? extends Iterable<? extends R>> mapper) {
-        this.source = source;
-        this.mapper = mapper;
-    }
 
     @Override
     public void subscribe(Flow.Subscriber<? super R> subscriber) {
@@ -158,7 +153,7 @@ final class SingleFlatMapIterable<T, R> implements Multi<R> {
             long e = emitted;
 
             outer:
-            for (;;) {
+            for (; ; ) {
 
                 int c = canceled;
                 if (c != 0) {

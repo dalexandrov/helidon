@@ -23,19 +23,14 @@ import io.helidon.common.mapper.Mapper;
 
 /**
  * Maps the upstream items via a {@link Mapper} function.
+ *
  * @param <T> the upstream value type
  * @param <R> the result value type
  */
-final class MultiMapperPublisher<T, R> implements Multi<R> {
+final record MultiMapperPublisher<T, R>(
+        Flow.Publisher<T> source,
+        Function<? super T, ? extends R> mapper) implements Multi<R> {
 
-    private final Flow.Publisher<T> source;
-
-    private final Function<? super T, ? extends R> mapper;
-
-    MultiMapperPublisher(Flow.Publisher<T> source, Function<? super T, ? extends R> mapper) {
-        this.source = source;
-        this.mapper = mapper;
-    }
 
     @Override
     public void subscribe(Flow.Subscriber<? super R> subscriber) {

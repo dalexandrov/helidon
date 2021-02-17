@@ -20,16 +20,9 @@ package io.helidon.common.reactive;
 import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicLong;
 
-final class MultiRangeLongPublisher implements Multi<Long> {
-
-    private final long start;
-
-    private final long end;
-
-    MultiRangeLongPublisher(long start, long end) {
-        this.start = start;
-        this.end = end;
-    }
+final record MultiRangeLongPublisher (
+      long start,
+      long end) implements Multi<Long> {
 
     @Override
     public void subscribe(Flow.Subscriber<? super Long> subscriber) {

@@ -22,18 +22,12 @@ import java.util.concurrent.Flow;
 
 /**
  * Skips the first {@code n} items from the source and relays the rest as they are.
+ *
  * @param <T> the element type of the sequence
  */
-final class MultiSkipPublisher<T> implements Multi<T> {
-
-    private final Multi<T> source;
-
-    private final long n;
-
-    MultiSkipPublisher(Multi<T> source, long n) {
-        this.source = source;
-        this.n = Math.max(0L, n);
-    }
+final record MultiSkipPublisher<T>(
+        Multi<T> source,
+        long n) implements Multi<T> {
 
 
     @Override

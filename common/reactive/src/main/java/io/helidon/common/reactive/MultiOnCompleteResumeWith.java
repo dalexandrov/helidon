@@ -27,16 +27,10 @@ import java.util.concurrent.atomic.AtomicReference;
  *
  * @param <T> the element type of the flows
  */
-final class MultiOnCompleteResumeWith<T> implements Multi<T> {
+final record MultiOnCompleteResumeWith<T>(
+        Multi<T> source,
+        Flow.Publisher<? extends T> fallbackPublisher) implements Multi<T> {
 
-    private final Multi<T> source;
-
-    private final Flow.Publisher<? extends T> fallbackPublisher;
-
-    MultiOnCompleteResumeWith(Multi<T> source, Flow.Publisher<? extends T> fallbackPublisher) {
-        this.source = source;
-        this.fallbackPublisher = fallbackPublisher;
-    }
 
     @Override
     public void subscribe(Flow.Subscriber<? super T> subscriber) {

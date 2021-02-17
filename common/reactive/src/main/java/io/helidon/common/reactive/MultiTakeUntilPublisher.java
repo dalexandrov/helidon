@@ -25,19 +25,13 @@ import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Relay upstream items until the other source signals an item or completes.
+ *
  * @param <T> the upstream and output value type
  * @param <U> the other sequence indicating when the main sequence should stop
  */
-final class MultiTakeUntilPublisher<T, U> implements Multi<T> {
-
-    private final Multi<T> source;
-
-    private final Flow.Publisher<U> other;
-
-    MultiTakeUntilPublisher(Multi<T> source, Flow.Publisher<U> other) {
-        this.source = source;
-        this.other = other;
-    }
+final record MultiTakeUntilPublisher<T, U>(
+        Multi<T> source,
+        Flow.Publisher<U> other) implements Multi<T> {
 
     @Override
     public void subscribe(Flow.Subscriber<? super T> subscriber) {
@@ -125,7 +119,7 @@ final class MultiTakeUntilPublisher<T, U> implements Multi<T> {
         }
 
         static final class TakeUntilOtherSubscriber extends AtomicReference<Flow.Subscription>
-        implements Flow.Subscriber<Object> {
+                implements Flow.Subscriber<Object> {
 
             private final TakeUntilMainSubscriber<?> parent;
 

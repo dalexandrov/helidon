@@ -25,19 +25,14 @@ import java.util.function.Function;
 
 /**
  * If the upstream fails, switch to a generated Flow.Publisher and relay its signals then on.
+ *
  * @param <T> the element type of the flows
  */
-final class MultiOnErrorResumeWith<T> implements Multi<T> {
+final record MultiOnErrorResumeWith<T>(
+        Multi<T> source,
+        Function<? super Throwable, ? extends Flow.Publisher<? extends T>> fallbackFunction
+) implements Multi<T> {
 
-    private final Multi<T> source;
-
-    private final Function<? super Throwable, ? extends Flow.Publisher<? extends T>> fallbackFunction;
-
-    MultiOnErrorResumeWith(Multi<T> source,
-           Function<? super Throwable, ? extends Flow.Publisher<? extends T>> fallbackFunction) {
-        this.source = source;
-        this.fallbackFunction = fallbackFunction;
-    }
 
     @Override
     public void subscribe(Flow.Subscriber<? super T> subscriber) {
@@ -59,7 +54,7 @@ final class MultiOnErrorResumeWith<T> implements Multi<T> {
         private final FallbackSubscriber<T> fallbackSubscriber;
 
         OnErrorResumeWithSubscriber(Flow.Subscriber<? super T> downstream,
-                Function<? super Throwable, ? extends Flow.Publisher<? extends T>> fallbackFunction) {
+                                    Function<? super Throwable, ? extends Flow.Publisher<? extends T>> fallbackFunction) {
             this.downstream = downstream;
             this.fallbackFunction = fallbackFunction;
             this.requested = new AtomicLong();
@@ -126,7 +121,7 @@ final class MultiOnErrorResumeWith<T> implements Multi<T> {
         }
 
         static final class FallbackSubscriber<T> extends AtomicReference<Flow.Subscription>
-        implements Flow.Subscriber<T> {
+                implements Flow.Subscriber<T> {
 
             private final Flow.Subscriber<? super T> downstream;
 

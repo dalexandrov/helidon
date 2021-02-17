@@ -26,22 +26,12 @@ import java.util.concurrent.atomic.AtomicReferenceArray;
  * Signal items and terminal signals of the upstream on the given executor.
  * @param <T> the element type of the sequence
  */
-final class MultiObserveOn<T> implements Multi<T> {
+final record MultiObserveOn<T> (
+      Multi<T> source,
+      Executor executor,
+      int bufferSize,
+      boolean delayError)implements Multi<T> {
 
-    private final Multi<T> source;
-
-    private final Executor executor;
-
-    private final int bufferSize;
-
-    private final boolean delayError;
-
-    MultiObserveOn(Multi<T> source, Executor executor, int bufferSize, boolean delayError) {
-        this.source = source;
-        this.executor = executor;
-        this.bufferSize = bufferSize;
-        this.delayError = delayError;
-    }
 
     @Override
     public void subscribe(Flow.Subscriber<? super T> subscriber) {
