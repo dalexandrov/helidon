@@ -65,6 +65,7 @@ final class ByteChannelBodyWriter implements MessageBodyWriter<ReadableByteChann
 
     /**
      * Create a new instance of {@link ByteChannelBodyWriter} with the given {@link RetrySchema}.
+     *
      * @param schema retry schema
      * @return {@link ReadableByteChannel} message body writer
      */
@@ -85,19 +86,20 @@ final class ByteChannelBodyWriter implements MessageBodyWriter<ReadableByteChann
      * Implementation of {@link Mapper} that converts a
      * {@link ReadableByteChannel} to a publisher of {@link DataChunk}.
      */
-    private static final class ByteChannelToChunks implements Mapper<ReadableByteChannel, Publisher<DataChunk>> {
+    private static final record ByteChannelToChunks(
+            Function<ReadableByteChannel, Publisher<DataChunk>> publisherFunction
+    ) implements Mapper<ReadableByteChannel, Publisher<DataChunk>> {
 
-        private final Function<ReadableByteChannel, Publisher<DataChunk>> publisherFunction;
 
         ByteChannelToChunks() {
-            this.publisherFunction = channel -> IoMulti.multiFromByteChannel(channel).map(DataChunk::create);
+            this(channel -> IoMulti.multiFromByteChannel(channel).map(DataChunk::create));
         }
 
         ByteChannelToChunks(RetrySchema schema) {
-            this.publisherFunction = channel -> IoMulti.multiFromByteChannelBuilder(channel)
+            this(channel -> IoMulti.multiFromByteChannelBuilder(channel)
                     .retrySchema(schema)
                     .build()
-                    .map(DataChunk::create);
+                    .map(DataChunk::create));
         }
 
         @Override

@@ -50,19 +50,9 @@ import org.glassfish.jersey.process.internal.RequestScoped;
  * </pre>
  */
 @ConstrainedTo(RuntimeType.SERVER)
-public final class SecurityFeature implements Feature {
-    private final Security security;
-    private final FeatureConfig featureConfig;
-
-    /**
-     * Create a new instance of security feature for a security component.
-     *
-     * This constructor is workaround solution for Jersey instantiation problem.
-     */
-    public SecurityFeature() {
-        this.security = null;
-        this.featureConfig = null;
-    }
+public record SecurityFeature(
+          Security security,
+          FeatureConfig featureConfig)implements Feature {
 
     /**
      * Create a new instance of security feature for a security component.
@@ -70,13 +60,11 @@ public final class SecurityFeature implements Feature {
      * @param security Fully configured security component to integrate with Jersey
      */
     public SecurityFeature(Security security) {
-        this.security = security;
-        this.featureConfig = new FeatureConfig(builder(security).config(security.configFor("jersey")));
+        this(security, new FeatureConfig(builder(security).config(security.configFor("jersey"))));
     }
 
     private SecurityFeature(Builder builder) {
-        this.security = builder.security;
-        this.featureConfig = new FeatureConfig(builder);
+        this( builder.security, new FeatureConfig(builder));
     }
 
     /**
@@ -120,10 +108,6 @@ public final class SecurityFeature implements Feature {
         });
 
         return true;
-    }
-
-    FeatureConfig featureConfig() {
-        return featureConfig;
     }
 
     /**

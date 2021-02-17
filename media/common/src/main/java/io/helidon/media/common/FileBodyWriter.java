@@ -67,13 +67,11 @@ final class FileBodyWriter implements MessageBodyWriter<File> {
      * Implementation of {@link Mapper} that converts {@link File} to a
      * publisher of {@link DataChunk}.
      */
-    private static final class FileToChunks implements Mapper<File, Publisher<DataChunk>> {
+    private static final record FileToChunks(
+            MessageBodyWriterContext context
+    )
+            implements Mapper<File, Publisher<DataChunk>> {
 
-        private final MessageBodyWriterContext context;
-
-        FileToChunks(MessageBodyWriterContext context) {
-            this.context = context;
-        }
 
         @Override
         public Publisher<DataChunk> map(File file) {

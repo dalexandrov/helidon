@@ -60,13 +60,9 @@ final class CharSequenceBodyWriter implements MessageBodyWriter<CharSequence> {
         return DEFAULT;
     }
 
-    private static final class CharSequenceToChunks implements Mapper<CharSequence, Publisher<DataChunk>> {
+    private static final record CharSequenceToChunks(
+            Charset charset) implements Mapper<CharSequence, Publisher<DataChunk>> {
 
-        private final Charset charset;
-
-        CharSequenceToChunks(Charset charset) {
-            this.charset = charset;
-        }
 
         @Override
         public Publisher<DataChunk> map(CharSequence content) {

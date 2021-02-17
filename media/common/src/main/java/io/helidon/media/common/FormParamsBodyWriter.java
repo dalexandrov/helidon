@@ -70,15 +70,9 @@ class FormParamsBodyWriter implements MessageBodyWriter<FormParams> {
         return single.flatMap(new FormParamsToChunks(mediaType, charset));
     }
 
-    static final class FormParamsToChunks implements Mapper<FormParams, Flow.Publisher<DataChunk>> {
-
-        private final MediaType mediaType;
-        private final Charset charset;
-
-        FormParamsToChunks(MediaType mediaType, Charset charset) {
-            this.mediaType = mediaType;
-            this.charset = charset;
-        }
+    static final record FormParamsToChunks(MediaType mediaType,
+                                           Charset charset)
+            implements Mapper<FormParams, Flow.Publisher<DataChunk>> {
 
         @Override
         public Flow.Publisher<DataChunk> map(FormParams formParams) {

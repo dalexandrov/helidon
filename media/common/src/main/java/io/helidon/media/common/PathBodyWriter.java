@@ -65,13 +65,7 @@ final class PathBodyWriter implements MessageBodyWriter<Path> {
      * Implementation of {@link Mapper} that converts a {@link Path} to a
      * publisher of {@link DataChunk}.
      */
-    private static final class PathToChunks implements Mapper<Path, Publisher<DataChunk>> {
-
-        private final MessageBodyWriterContext context;
-
-        PathToChunks(MessageBodyWriterContext context) {
-            this.context = context;
-        }
+    private static final record PathToChunks(MessageBodyWriterContext context) implements Mapper<Path, Publisher<DataChunk>> {
 
         @Override
         public Publisher<DataChunk> map(Path path) {

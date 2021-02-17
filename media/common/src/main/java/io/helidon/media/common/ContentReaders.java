@@ -60,7 +60,8 @@ public final class ContentReaders {
 
     /**
      * Convert the given publisher of {@link DataChunk} into a {@link String}.
-     * @param chunks source publisher
+     *
+     * @param chunks  source publisher
      * @param charset charset to use for decoding the bytes
      * @return Single
      */
@@ -71,13 +72,14 @@ public final class ContentReaders {
     /**
      * Convert the publisher of {@link DataChunk} into a {@link String} processed through URL
      * decoding.
-     * @param chunks source publisher
+     *
+     * @param chunks  source publisher
      * @param charset charset to use for decoding the input
      * @return Single
      * @since 2.0.0
      */
     public static Single<String> readURLEncodedString(Publisher<DataChunk> chunks,
-            Charset charset) {
+                                                      Charset charset) {
         return readString(chunks, charset).map(new StringToDecodedString(charset));
     }
 
@@ -88,7 +90,7 @@ public final class ContentReaders {
      * @param charset the charset to use with the returned string content reader
      * @return a string content reader
      * @deprecated since 2.0.0, use {@link #readString(Publisher, Charset)}}
-     *  or {@link DefaultMediaSupport#stringReader()} instead
+     * or {@link DefaultMediaSupport#stringReader()} instead
      */
     @Deprecated(since = "2.0.0")
     public static Reader<String> stringReader(Charset charset) {
@@ -141,13 +143,7 @@ public final class ContentReaders {
      * Implementation of {@link Mapper} that converts a {@code byte[]} into
      * a {@link String} using a given {@link Charset}.
      */
-    private static final class BytesToString implements Mapper<byte[], String> {
-
-        private final Charset charset;
-
-        BytesToString(Charset charset) {
-            this.charset = charset;
-        }
+    private static final record BytesToString(Charset charset) implements Mapper<byte[], String> {
 
         @Override
         public String map(byte[] bytes) {
@@ -158,13 +154,7 @@ public final class ContentReaders {
     /**
      * Mapper that applies URL decoding to a {@code String}.
      */
-    private static final class StringToDecodedString implements Mapper<String, String> {
-
-        private final Charset charset;
-
-        StringToDecodedString(Charset charset) {
-            this.charset = charset;
-        }
+    private static final record StringToDecodedString(Charset charset) implements Mapper<String, String> {
 
         @Override
         public String map(String s) {
@@ -179,16 +169,16 @@ public final class ContentReaders {
             }
         }
     }
+
     /**
      * Implementation of {@link Collector} that collects chunks into a single
      * {@code byte[]}.
      */
-    private static final class BytesCollector implements Collector<DataChunk, byte[]> {
+    private static final record BytesCollector(ByteArrayOutputStream baos) implements Collector<DataChunk, byte[]> {
 
-        private final ByteArrayOutputStream baos;
 
         BytesCollector() {
-            this.baos = new ByteArrayOutputStream();
+            this(new ByteArrayOutputStream());
         }
 
         @Override
