@@ -26,14 +26,9 @@ import io.helidon.config.ConfigMappingException;
 import io.helidon.config.ConfigValue;
 import io.helidon.config.MissingValueException;
 
-class SeConfigValue<T> implements ConfigValue<T> {
-    private final Config.Key key;
-    private final Supplier<T> valueSupplier;
-
-    SeConfigValue(Config.Key key, Supplier<T> valueSupplier) {
-        this.key = key;
-        this.valueSupplier = valueSupplier;
-    }
+record SeConfigValue<T>(
+        Config.Key key,
+        Supplier<T> valueSupplier) implements ConfigValue<T> {
 
     @Override
     public Config.Key key() {

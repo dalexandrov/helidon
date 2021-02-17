@@ -18,12 +18,12 @@ package io.helidon.faulttolerance;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-final class AtomicCycle {
-    private final AtomicInteger atomicInteger = new AtomicInteger(-1);
-    private final int maxIndex;
+final record AtomicCycle(
+        AtomicInteger atomicInteger,
+        int maxIndex) {
 
     AtomicCycle(int maxIndex) {
-        this.maxIndex = maxIndex + 1;
+        this(new AtomicInteger(-1), maxIndex + 1);
     }
 
     int get() {

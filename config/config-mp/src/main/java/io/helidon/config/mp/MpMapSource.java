@@ -24,14 +24,11 @@ import org.eclipse.microprofile.config.spi.ConfigSource;
 /**
  * Map based config source.
  */
-class MpMapSource implements ConfigSource {
-    private final Map<String, String> map;
-    private final String name;
+record MpMapSource(
+        String name,
+        Map<String, String> map
+) implements ConfigSource {
 
-    MpMapSource(String name, Map<String, String> map) {
-        this.name = name;
-        this.map = map;
-    }
 
     @Override
     public Map<String, String> getProperties() {

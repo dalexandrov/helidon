@@ -213,14 +213,9 @@ class WeightedSnapshot extends Snapshot {
     /**
      * A single sample item with value and its weights for {@link WeightedSnapshot}.
      */
-    static class WeightedSample {
-        private final long value;
-        private final double weight;
-
-        WeightedSample(long value, double weight) {
-            this.value = value;
-            this.weight = weight;
-        }
+    static record WeightedSample(
+            long value,
+            double weight) {
 
         long getValue() {
             return value;

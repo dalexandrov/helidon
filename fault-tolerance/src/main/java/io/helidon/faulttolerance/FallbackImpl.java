@@ -25,15 +25,15 @@ import java.util.function.Supplier;
 import io.helidon.common.reactive.Multi;
 import io.helidon.common.reactive.Single;
 
-class FallbackImpl<T> implements Fallback<T> {
-    private final Function<Throwable, ? extends CompletionStage<T>> fallback;
-    private final Function<Throwable, ? extends Flow.Publisher<T>> fallbackMulti;
-    private final ErrorChecker errorChecker;
+record FallbackImpl<T>(
+        Function<Throwable, ? extends CompletionStage<T>> fallback,
+        Function<Throwable, ? extends Flow.Publisher<T>> fallbackMulti,
+        ErrorChecker errorChecker
+) implements Fallback<T> {
+
 
     FallbackImpl(Fallback.Builder<T> builder) {
-        this.fallback = builder.fallback();
-        this.fallbackMulti = builder.fallbackMulti();
-        this.errorChecker = ErrorChecker.create(builder.skipOn(), builder.applyOn());
+        this(builder.fallback(), builder.fallbackMulti(), ErrorChecker.create(builder.skipOn(), builder.applyOn()));
     }
 
     @Override

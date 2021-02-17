@@ -30,19 +30,22 @@ import io.helidon.common.LazyValue;
 import io.helidon.common.reactive.Multi;
 import io.helidon.common.reactive.Single;
 
-class TimeoutImpl implements Timeout {
+record TimeoutImpl(
+        long timeoutMillis,
+        LazyValue<? extends ScheduledExecutorService> executor,
+        boolean currentThread,
+        String name
+) implements Timeout {
     private static final long MONITOR_THREAD_TIMEOUT = 100L;
 
-    private final long timeoutMillis;
-    private final LazyValue<? extends ScheduledExecutorService> executor;
-    private final boolean currentThread;
-    private final String name;
 
     TimeoutImpl(Timeout.Builder builder) {
-        this.timeoutMillis = builder.timeout().toMillis();
-        this.executor = builder.executor();
-        this.currentThread = builder.currentThread();
-        this.name = builder.name();
+        this(
+                builder.timeout().toMillis(),
+                builder.executor(),
+                builder.currentThread(),
+                builder.name()
+        );
     }
 
     @Override

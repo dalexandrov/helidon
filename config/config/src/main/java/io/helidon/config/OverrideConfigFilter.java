@@ -27,9 +27,10 @@ import io.helidon.config.spi.ConfigFilter;
 /**
  * A config filter that replaces values with a new ones of keys that matching with {@link Pattern}.
  */
-public class OverrideConfigFilter implements ConfigFilter {
+public record OverrideConfigFilter(
+        Supplier<List<Map.Entry<Predicate<Config.Key>, String>>>
+                overrideValuesSupplier) implements ConfigFilter {
 
-    private final Supplier<List<Map.Entry<Predicate<Config.Key>, String>>> overrideValuesSupplier;
 
     /**
      * Creates a filter with a given supplier of a map of key patterns to a override values.
