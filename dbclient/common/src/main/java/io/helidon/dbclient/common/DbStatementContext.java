@@ -21,11 +21,11 @@ import io.helidon.dbclient.DbStatementType;
 /**
  * Context of execution of a specific statement.
  */
-public class DbStatementContext {
-    private final DbClientContext clientContext;
-    private final DbStatementType statementType;
-    private final String statementName;
-    private final String statementText;
+public record DbStatementContext(
+        DbClientContext clientContext,
+        DbStatementType statementType,
+        String statementName,
+        String statementText) {
 
     /**
      * Create a new instance using a builder each implementation must extend.
@@ -33,10 +33,11 @@ public class DbStatementContext {
      * @param builder to get required fields from
      */
     protected DbStatementContext(BuilderBase<?> builder) {
-        this.clientContext = builder.clientContext;
-        this.statementType = builder.statementType;
-        this.statementName = builder.statementName;
-        this.statementText = builder.statementText;
+        this(
+                builder.clientContext,
+                builder.statementType,
+                builder.statementName,
+                builder.statementText);
     }
 
     /**
@@ -55,7 +56,6 @@ public class DbStatementContext {
      * @param statementType type of statement
      * @param statementName name of statement
      * @param statementText text of the statement to execute
-     *
      * @return a new statement context
      */
     public static DbStatementContext create(DbClientContext clientContext,
@@ -72,6 +72,7 @@ public class DbStatementContext {
 
     /**
      * Client context associated with the client executing this statement.
+     *
      * @return client context
      */
     public DbClientContext clientContext() {
@@ -80,6 +81,7 @@ public class DbStatementContext {
 
     /**
      * Statement type of this statement.
+     *
      * @return type of statement
      */
     public DbStatementType statementType() {
@@ -88,6 +90,7 @@ public class DbStatementContext {
 
     /**
      * Name of this statement.
+     *
      * @return name of statement
      */
     public String statementName() {
@@ -96,6 +99,7 @@ public class DbStatementContext {
 
     /**
      * Statement text as configured.
+     *
      * @return statement text
      */
     public String statement() {
@@ -121,7 +125,8 @@ public class DbStatementContext {
      * @param <T> type of the builder extending this builder
      */
     public abstract static class BuilderBase<T extends BuilderBase<T>> {
-        @SuppressWarnings("unchecked") private final T me = (T) this;
+        @SuppressWarnings("unchecked")
+        private final T me = (T) this;
         private DbClientContext clientContext;
         private DbStatementType statementType;
         private String statementName;

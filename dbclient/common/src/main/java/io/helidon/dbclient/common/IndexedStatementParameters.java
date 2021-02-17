@@ -25,13 +25,15 @@ import io.helidon.dbclient.DbMapperManager;
 /**
  * Statement with indexed parameters.
  */
-class IndexedStatementParameters implements StatementParameters {
+record IndexedStatementParameters(
+          List<Object> parameters,
+  DbMapperManager dbMapperManager
+) implements StatementParameters {
 
-    private final List<Object> parameters = new LinkedList<>();
-    private final DbMapperManager dbMapperManager;
+
 
     IndexedStatementParameters(DbMapperManager dbMapperManager) {
-        this.dbMapperManager = dbMapperManager;
+        this(new LinkedList<>(),dbMapperManager);
     }
 
     @Override
